@@ -1,0 +1,51 @@
+﻿@model FilmCatalog.DAL.Models.ViewModels.IndexFilmsViewModel
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Все фильмы</h2>
+<div class="row">
+    @foreach (var item in Model.Items)
+    {
+        <div class="col-3">
+            <a href="@Url.Action("Details", "Films", new {item.Id})">
+
+                <img src="@item.Poster.Path" class="w-100 h-75" />
+                <p>@item.Name</p>
+            </a>
+        </div>
+    }
+
+</div>
+    @if (Model.Pager.EndPage > 1)
+{
+    <ul class="pagination justify-content-center mt-5">
+        @if (Model.Pager.CurrentPage > 1)
+        {
+            <li class="page-item">
+                <a class="page-link" href="~/Films/Index">First</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="~/Films/Index?page=@(Model.Pager.CurrentPage - 1)">Previous</a>
+            </li>
+        }
+
+        @for (var page = Model.Pager.StartPage; page <= Model.Pager.EndPage; page++)
+        {
+            <li class="@(page == Model.Pager.CurrentPage ? "active" : "")">
+                <a class="page-link" href="~/Films/Index?page=@page">@page</a>
+            </li>
+        }
+
+        @if (Model.Pager.CurrentPage < Model.Pager.TotalPages)
+        {
+            <li class="page-item">
+                <a class="page-link" href="~/Films/Index?page=@(Model.Pager.CurrentPage + 1)">Next</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="~/Films/Index?page=@(Model.Pager.TotalPages)">Last</a>
+            </li>
+        }
+    </ul>
+}
