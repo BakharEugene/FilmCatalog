@@ -15,9 +15,8 @@ namespace FilmCatalog.Controllers
 {
     public class FilmsController : Controller
     {
-        private UnitOfWork db=new UnitOfWork();
+        private UnitOfWork db = new UnitOfWork();
 
-        // GET: Films
         [HttpGet]
         public ActionResult Index(int? page)
         {
@@ -33,7 +32,6 @@ namespace FilmCatalog.Controllers
             return View(viewModel);
         }
 
-        // GET: Films/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -47,7 +45,6 @@ namespace FilmCatalog.Controllers
             }
             return View(film);
         }
-        // GET: Films/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -55,16 +52,20 @@ namespace FilmCatalog.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Film film = db.Films.GetById(id);
+
             if (film == null)
             {
                 return HttpNotFound();
             }
-            return View(film);
+            if (film.IdUser == db.Users.GetAll().FirstOrDefault(x => x.Email == User.Identity.Name).Id)
+            {
+                return View(film);
+            }
+            else
+            {
+                return RedirectToAction("Denied", "Account");
+            }
         }
-
-        // POST: Films/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,Name,Description,ReleaseDate,Producer,IdUser,IdPoster")] Film film)
@@ -75,34 +76,10 @@ namespace FilmCatalog.Controllers
                 db.Save();
                 return RedirectToAction("Index");
             }
-            
-            return View(film);
-        }
-        
-        // GET: Films/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Film film = db.Films.GetById(id);
-            if (film == null)
-            {
-                return HttpNotFound();
-            }
+
             return View(film);
         }
 
-        // POST: Films/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            db.Films.Delete(id);
-            db.Save();
-            return RedirectToAction("Index");
-        }
 
         protected override void Dispose(bool disposing)
         {

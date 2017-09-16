@@ -19,6 +19,11 @@ namespace FilmCatalog.Controllers
             return View();
         }
 
+        public ActionResult Denied()
+        {
+            return View();
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Login(LoginModel model)

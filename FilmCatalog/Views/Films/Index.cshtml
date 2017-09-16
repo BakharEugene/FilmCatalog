@@ -1,7 +1,7 @@
 ﻿@model FilmCatalog.DAL.Models.ViewModels.IndexFilmsViewModel
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Фильмы";
 }
 
 <h2>Все фильмы</h2>
@@ -10,8 +10,7 @@
     {
         <div class="col-3">
             <a href="@Url.Action("Details", "Films", new {item.Id})">
-
-                <img src="@item.Poster.Path" class="w-100 h-75" />
+                <img src="~/@item.Poster.Path" class="w-100 h-75" />
                 <p>@item.Name</p>
             </a>
         </div>
@@ -33,7 +32,7 @@
 
         @for (var page = Model.Pager.StartPage; page <= Model.Pager.EndPage; page++)
         {
-            <li class="@(page == Model.Pager.CurrentPage ? "active" : "")">
+            <li class="page-item @(page == Model.Pager.CurrentPage ? "active" : "")">
                 <a class="page-link" href="~/Films/Index?page=@page">@page</a>
             </li>
         }
